@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loka Ram Kalyan | Portfolio</title>
+  <!-- AOS Library -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #0a192f;
+      color: #ccd6f6;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: #64ffda;
+      text-decoration: none;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 30px;
+      background: #112240;
+      animation: fadeInDown 1s ease-in-out;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      animation: logoPulse 2s infinite;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+    }
+
+    nav ul {
+      list-style-type: none;
+      display: flex;
+      gap: 20px;
+    }
+
+    nav ul li {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: 120px;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+    }
+
+    .hero p {
+      margin: 20px 0;
+      font-size: 1.2rem;
+      max-width: 600px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 10px;
+      color: #0a192f;
+      background-color: #64ffda;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #52d8c0;
+      transform: scale(1.05);
+    }
+
+    section {
+      padding: 50px;
+      max-width: 900px;
+      margin: auto;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #112240;
+      color: #8892b0;
+      animation: fadeInUp 1s ease-in-out;
+    }
+
+    .socials a {
+      margin: 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .skills {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .skill {
+      text-align: center;
+      width: 120px;
+      margin: 20px;
+    }
+
+    .ring-bar {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .ring-bar svg {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+    }
+
+    .ring-bar svg circle {
+      fill: transparent;
+      stroke-width: 8;
+    }
+    /* Updated Ring Bar CSS for smooth animation */
+.ring-bar svg circle {
+  transition: stroke-dashoffset 1s ease-in-out; /* Add smooth transition for stroke-dashoffset */
+}
+
+    .ring-bar svg .circle-background {
+      stroke: #112240;
+    }
+
+    .ring-bar svg .circle-progress {
+      stroke: #64ffda;
+      stroke-dasharray: 314;
+      stroke-dashoffset: 314;
+      transition: stroke-dashoffset 1s ease;
+    }
+
+    .skill-title {
+      z-index: 10;
+      font-weight: bold;
+      color: #ccd6f6;
+      font-size: 14px;
+      position: absolute;
+      transform: none;
+    }
+
+    /* Fix for Contact Section Alignment */
+    .contact-section {
+        text-align: center;
+        margin: 80px auto;
+        padding: 40px 20px;
+        background: #112240;
+        border-radius: 8px;
+        width: 90%; /* Make width responsive */
+        max-width: 800px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      
+      .contact-section h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        color: #64ffda;
+      }
+      
+      .contact-message p {
+        font-size: 1.5rem; /* Default font size for large screens */
+        line-height: 1.5;
+        color: #ccd6f6;
+        margin-bottom: 20px;
+      }
+      
+      .contact-btn {
+        padding: 12px 25px;
+        background-color: #64ffda;
+        color: #0a192f;
+        font-weight: bold;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+      }
+      
+      .contact-btn:hover {
+        background-color: #52d8c0;
+        transform: scale(1.05);
+      }
+      
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .contact-message p {
+          font-size: 1.2rem; /* Adjust font size for medium screens */
+        }
+      
+        .contact-btn {
+          font-size: 14px;
+          padding: 10px 20px;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .contact-message p {
+          font-size: 1rem; /* Adjust font size for small screens */
+        }
+      
+        .contact-btn {
+          font-size: 12px;
+          padding: 8px 15px;
+        }
+      }
+      
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes logoPulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#home" class="logo">
+      <img src="logo.png" alt="Loka Ram Kalyan Logo" onclick="">
+      <!-- <h1>Loka Ram Kalyan</h1> -->
+    </a>
+    <nav>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section  id ="home" class="hero" data-aos="fade-up">
+    <h1>Hello! I'm Loka Ram Kalyan</h1>
+    <p>An aspiring Software Developer with a passion for building user-friendly applications and solving real-world problems.</p>
+    <a href="#about" class="btn">Learn More</a>
+    <a href="./resume.pdf" class="btn">Download Resume</a>
+  </section>
+
+  <section id="about">
+    <h2>About Me</h2>
+    <p>I am a B.Tech Computer Science undergraduate at Annamacharya Institute of Technology and Sciences. I have hands-on experience in backend development, web technologies, and Android app development. I am eager to apply my knowledge in real-world applications and collaborate with teams to bring innovative solutions to life.</p>
+  </section>
+
+  <section id="projects">
+    <h2>Projects</h2>
+    <ul>
+      <li><strong>Blogging Website:</strong> Collaborated with a team to develop a blogging platform, focusing on backend and database integration using Python and SQL.</li>
+      <li><strong>Notes App:</strong> Built an Android application with CRUD operations for managing notes using Android Studio and Java.</li>
+    </ul>
+  </section>
+
+  <section id="skills" data-aos="fade-up">
+    <h2>Skills</h2>
+    <div class="skills">
+      <div class="skill">
+        <div class="ring-bar" data-progress="85">
+          <svg>
+            <circle class="circle-background" cx="50" cy="50" r="45"></circle>
+            <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+          </svg>
+          <span class="skill-title">Python</span>
+        </div>
+      </div>
+      <div class="skill">
+        <div class="ring-bar" data-progress="75">
+          <svg>
+            <circle class="circle-background" cx="50" cy="50" r="45"></circle>
+            <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+          </svg>
+          <span class="skill-title">Java</span>
+        </div>
+      </div>
+      <div class="skill">
+        <div class="ring-bar" data-progress="80">
+          <svg>
+            <circle class="circle-background" cx="50" cy="50" r="45"></circle>
+            <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+          </svg>
+          <span class="skill-title">SQL</span>
+        </div>
+      </div>
+      <div class="skill">
+        <div class="ring-bar" data-progress="90">
+          <svg>
+            <circle class="circle-background" cx="50" cy="50" r="45"></circle>
+            <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+          </svg>
+          <span class="skill-title">HTML</span>
+        </div>
+      </div>
+      <div class="skill">
+        <div class="ring-bar" data-progress="85">
+          <svg>
+            <circle class="circle-background" cx="50" cy="50" r="45"></circle>
+            <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+          </svg>
+          <span class="skill-title">CSS</span>
+        </div>
+      </div>
+      <div class="skill">
+        <div class="ring-bar" data-progress="70">
+          <svg>
+            <circle class="circle-background" cx="50" cy="50" r="45"></circle>
+            <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+          </svg>
+          <span class="skill-title">JavaScript</span>
+        </div>
+      </div>
+      <div class="skill">
+        <div class="ring-bar" data-progress="60">
+          <svg>
+            <circle class="circle-background" cx="50" cy="50" r="45"></circle>
+            <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+          </svg>
+          <span class="skill-title">Android Development</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact-section">
+    <h2>Contact Me</h2>
+    <div class="contact-message">
+      <p>If you'd like to connect or have any questions, feel free to reach out!</p>
+    </div>
+    <a href="mailto:alrk6125@gmail.com" class="contact-btn">Hello!</a>
+  </section>
+
+  <footer>
+    <p>&copy; 2024 Loka Ram Kalyan. Built with ❤️</p>
+  </footer>
+
+  <!-- AOS Script -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    window.onload = () => {
+        // Progress Bar Animation
+        const rings = document.querySelectorAll('.ring-bar');
+        
+        rings.forEach(ring => {
+          const progress = ring.getAttribute('data-progress');
+          const circumference = 314; // Circumference of the circle (2 * π * radius), with radius = 50
+          const offset = circumference - (progress / 100) * circumference;
+          
+          // Select the circle for animation
+          const progressCircle = ring.querySelector('.circle-progress');
+          
+          // Initially set stroke-dashoffset to the full length of the circle (hidden)
+          progressCircle.style.strokeDashoffset = circumference;
+          
+          // Trigger the animation by changing the stroke-dashoffset
+          setTimeout(() => {
+            progressCircle.style.strokeDashoffset = offset;
+          }, 100); // Delay slightly to ensure the page loads before animation starts
+        });
+      };
+      
+
+    // AOS Initialization
+    AOS.init({
+      duration: 1000, // Animation duration
+      once: true,     // Animation happens only once
+    });
+  </script>
+  <script>
+    document.querySelector('.logo').addEventListener('click', function (event) {
+      event.preventDefault(); // Prevent default anchor behavior
+      document.querySelector('#home').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    });
+  </script>
+  
+
+</body>
+</html>

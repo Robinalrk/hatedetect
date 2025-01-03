@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hate Speech Classifier</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Background gradient */
+        body {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar styling */
+        .navbar {
+            background-color: #2575fc;
+            padding: 15px;
+        }
+
+        .navbar-brand {
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .navbar-nav .nav-link {
+            color: #ffffff;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #6a11cb;
+        }
+
+        /* Section container design */
+        .section {
+            max-width: 650px;
+            background-color: #ffffff;
+            color: #343a40;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+            margin: 40px auto;
+        }
+
+        /* Heading styles */
+        h1, h2 {
+            color: #2575fc;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Highlighting styles */
+        .highlight-red {
+            color: #ff4c4c;
+            font-weight: bold;
+        }
+
+        .highlight-green {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        /* Footer styles */
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #ffffff;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="#">Hate Speech Classifier</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#hate">Hate</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#analyze">Analyze</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#classify">Classify</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hate Section -->
+    <section id="hate" class="section">
+        <h2>Hate Speech Detector</h2>
+        <form method="post" action="/predict" id="predictionForm">
+            <div class="form-group">
+                <label for="tweet">Enter Text:</label>
+                <textarea class="form-control" id="tweet" name="tweet" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-block" style="background-color: #2575fc; color: #fff;">Classify</button>
+        </form>
+        <div id="result" class="mt-4"></div>
+    </section>
+
+    <!-- Analyze Section -->
+    <section id="analyze" class="section">
+        <h2>Analyze Accuracy</h2>
+        <div id="metrics">
+            <p>Loading metrics...</p>
+        </div>
+    </section>
+
+    <!-- Add Data Section -->
+    <section id="add-data" class="section">
+        <h2>Add to Dataset</h2>
+        <p>Help us improve the classifier by adding labeled data.</p>
+        <form method="post" action="/add-to-dataset">
+            <div class="form-group">
+                <label for="userText">Enter Text:</label>
+                <textarea class="form-control" id="userText" name="userText" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="userLabel">Select Label:</label><br>
+                <input type="radio" id="hate_speech" name="userLabel" value="0" required>
+                <label for="hate_speech">Hate Speech</label><br>
+                <input type="radio" id="offensive_language" name="userLabel" value="1">
+                <label for="offensive_language">Offensive Language</label><br>
+                <input type="radio" id="neutral" name="userLabel" value="2">
+                <label for="neutral">Neutral</label><br>
+            </div>
+            <button type="submit" class="btn btn-block" style="background-color: #2575fc; color: #fff;">Submit</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2024 Hate Speech Classifier | Designed with ❤
+    </footer>
+
+    <script>
+        // Fetch metrics and display in the Analyze section
+        async function loadMetrics() {
+            const response = await fetch('/metrics');
+            const metrics = await response.json();
+            let htmlContent = "";
+
+            for (const [model, data] of Object.entries(metrics)) {
+                htmlContent += `<h4>${model}</h4>`;
+                htmlContent += `<p><strong>Accuracy:</strong> ${(data.Accuracy * 100).toFixed(2)}%</p>`;
+                htmlContent += `<pre>${JSON.stringify(data["Classification Report"], null, 2)}</pre>`;
+            }
+
+            document.getElementById('metrics').innerHTML = htmlContent;
+        }
+
+        // Call loadMetrics on page load
+        window.onload = loadMetrics;
+
+        // Submit form for prediction
+        document.getElementById('predictionForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+
+            document.getElementById('result').innerHTML = `
+                <h4>Input Text:</h4>
+                <p>${result.highlighted_input}</p>
+                <h4>Prediction:</h4>
+                <p>${result.prediction}</p>
+            `;
+        };
+    </script>
+</body>
+</html>
