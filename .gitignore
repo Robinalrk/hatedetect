@@ -1,0 +1,27 @@
+# Virtual environment
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Models
+models_saved/
+
+# Data
+data/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Old files we keep for reference
+pre.py
+pre2.py
+preproc.py
+*.mp4
+porti.html
