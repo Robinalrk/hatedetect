@@ -3,182 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hate Speech Classifier</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Content Moderation API</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Background gradient */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f1a;
+            color: #e0e0e0;
+            min-height: 100vh;
         }
-
-        /* Navbar styling */
         .navbar {
-            background-color: #2575fc;
-            padding: 15px;
+            background: #1a1a2e;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2a2a4a;
         }
-
         .navbar-brand {
-            color: #ffffff;
-            font-weight: bold;
-            font-size: 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #7c6cf0;
         }
-
-        .navbar-nav .nav-link {
-            color: #ffffff;
-            font-weight: 600;
-            transition: color 0.3s ease;
+        .navbar-brand i { margin-right: 8px; }
+        .nav-links { display: flex; gap: 1.5rem; }
+        .nav-links a {
+            color: #a0a0c0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
         }
+        .nav-links a:hover { color: #7c6cf0; }
 
-        .navbar-nav .nav-link:hover {
-            color: #6a11cb;
-        }
+        .container { max-width: 720px; margin: 0 auto; padding: 2rem; }
 
-        /* Section container design */
-        .section {
-            max-width: 650px;
-            background-color: #ffffff;
-            color: #343a40;
-            padding: 30px;
+        .card {
+            background: #1a1a2e;
+            border: 1px solid #2a2a4a;
             border-radius: 12px;
-            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
-            margin: 40px auto;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
         }
+        .card h2 {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: #c0c0e0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card h2 i { color: #7c6cf0; }
 
-        /* Heading styles */
-        h1, h2 {
-            color: #2575fc;
-            font-weight: bold;
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #2a2a4a;
+            border-radius: 8px;
+            background: #0f0f1a;
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            resize: vertical;
+            min-height: 100px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        textarea:focus { border-color: #7c6cf0; }
+
+        button {
+            background: #7c6cf0;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 1rem;
+            width: 100%;
+        }
+        button:hover { background: #6a5ce0; transform: translateY(-1px); }
+        button:active { transform: translateY(0); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .result-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-box.threat { background: #2a1010; border: 1px solid #5a2020; }
+        .result-box.safe { background: #102a10; border: 1px solid #205a20; }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .badge-threat { background: #5a2020; color: #ff6b6b; }
+        .badge-safe { background: #205a20; color: #6bff6b; }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .stat-item {
+            background: #0f0f1a;
+            padding: 1rem;
+            border-radius: 8px;
             text-align: center;
         }
+        .stat-item .value { font-size: 1.5rem; font-weight: 700; color: #7c6cf0; }
+        .stat-item .label { font-size: 0.8rem; color: #8080a0; margin-top: 4px; }
 
-        /* Highlighting styles */
-        .highlight-red {
-            color: #ff4c4c;
-            font-weight: bold;
-        }
+        .highlight-red { color: #ff6b6b; font-weight: 600; }
+        .highlight-green { color: #6bff6b; font-weight: 600; }
 
-        .highlight-green {
-            color: #28a745;
-            font-weight: bold;
-        }
-
-        /* Footer styles */
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-            color: #ffffff;
-            opacity: 0.8;
+        @media (max-width: 600px) {
+            .container { padding: 1rem; }
+            .card { padding: 1.25rem; }
+            .stat-grid { grid-template-columns: 1fr; }
+            .navbar { flex-direction: column; gap: 0.5rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
-        <a class="navbar-brand" href="#">Hate Speech Classifier</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#hate">Hate</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#analyze">Analyze</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#classify">Classify</a>
-                </li>
-            </ul>
+    <nav class="navbar">
+        <div class="navbar-brand"><i class="fas fa-shield-halved"></i> Content Moderation</div>
+        <div class="nav-links">
+            <a href="#classify"><i class="fas fa-search"></i> Classify</a>
+            <a href="#info"><i class="fas fa-chart-simple"></i> Info</a>
         </div>
     </nav>
 
-    <!-- Hate Section -->
-    <section id="hate" class="section">
-        <h2>Hate Speech Detector</h2>
-        <form method="post" action="/predict" id="predictionForm">
-            <div class="form-group">
-                <label for="tweet">Enter Text:</label>
-                <textarea class="form-control" id="tweet" name="tweet" rows="3" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-block" style="background-color: #2575fc; color: #fff;">Classify</button>
-        </form>
-        <div id="result" class="mt-4"></div>
-    </section>
-
-    <!-- Analyze Section -->
-    <section id="analyze" class="section">
-        <h2>Analyze Accuracy</h2>
-        <div id="metrics">
-            <p>Loading metrics...</p>
+    <div class="container">
+        <div id="classify" class="card">
+            <h2><i class="fas fa-microphone"></i> Classify Text</h2>
+            <textarea id="inputText" placeholder="Enter text to analyze..."></textarea>
+            <button id="classifyBtn" onclick="classify()"><i class="fas fa-shield"></i> Analyze</button>
+            <div id="result" class="result-box"></div>
         </div>
-    </section>
 
-    <!-- Add Data Section -->
-    <section id="add-data" class="section">
-        <h2>Add to Dataset</h2>
-        <p>Help us improve the classifier by adding labeled data.</p>
-        <form method="post" action="/add-to-dataset">
-            <div class="form-group">
-                <label for="userText">Enter Text:</label>
-                <textarea class="form-control" id="userText" name="userText" rows="3" required></textarea>
+        <div id="info" class="card">
+            <h2><i class="fas fa-chart-simple"></i> Model Info</h2>
+            <p style="color: #8080a0; font-size: 0.9rem;">Pre-trained Logistic Regression with TF-IDF vectorization. Detects hate speech, offensive language, and neutral content.</p>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="value" id="precision">0.00</div>
+                    <div class="label">Precision</div>
+                </div>
+                <div class="stat-item">
+                    <div class="value" id="recall">0.00</div>
+                    <div class="label">Recall</div>
+                </div>
+                <div class="stat-item">
+                    <div class="value" id="f1">0.00</div>
+                    <div class="label">F1 Score</div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="userLabel">Select Label:</label><br>
-                <input type="radio" id="hate_speech" name="userLabel" value="0" required>
-                <label for="hate_speech">Hate Speech</label><br>
-                <input type="radio" id="offensive_language" name="userLabel" value="1">
-                <label for="offensive_language">Offensive Language</label><br>
-                <input type="radio" id="neutral" name="userLabel" value="2">
-                <label for="neutral">Neutral</label><br>
-            </div>
-            <button type="submit" class="btn btn-block" style="background-color: #2575fc; color: #fff;">Submit</button>
-        </form>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        &copy; 2024 Hate Speech Classifier | Designed with ❤
-    </footer>
+        </div>
+    </div>
 
     <script>
-        // Fetch metrics and display in the Analyze section
-        async function loadMetrics() {
-            const response = await fetch('/metrics');
-            const metrics = await response.json();
-            let htmlContent = "";
+        async function classify() {
+            const text = document.getElementById('inputText').value.trim();
+            const btn = document.getElementById('classifyBtn');
+            const result = document.getElementById('result');
 
-            for (const [model, data] of Object.entries(metrics)) {
-                htmlContent += `<h4>${model}</h4>`;
-                htmlContent += `<p><strong>Accuracy:</strong> ${(data.Accuracy * 100).toFixed(2)}%</p>`;
-                htmlContent += `<pre>${JSON.stringify(data["Classification Report"], null, 2)}</pre>`;
+            if (!text) { result.className = 'result-box show safe'; result.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter text.'; return; }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+
+            try {
+                const res = await fetch('/api/v1/moderate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                });
+                const data = await res.json();
+
+                const isThreat = data.is_threat;
+                result.className = `result-box show ${isThreat ? 'threat' : 'safe'}`;
+                result.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                        <span class="badge ${isThreat ? 'badge-threat' : 'badge-safe'}">
+                            ${isThreat ? '<i class="fas fa-exclamation-triangle"></i> Threat' : '<i class="fas fa-check-circle"></i> Safe'}
+                        </span>
+                        <span style="color: #8080a0; font-size: 0.85rem;">${(data.confidence * 100).toFixed(1)}% confidence</span>
+                    </div>
+                    <div style="font-size: 0.9rem; color: #a0a0c0;">
+                        Label: <strong>${data.label}</strong>
+                    </div>
+                `;
+            } catch (err) {
+                result.className = 'result-box show threat';
+                result.innerHTML = '<i class="fas fa-times-circle"></i> Error: ' + err.message;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-shield"></i> Analyze';
             }
-
-            document.getElementById('metrics').innerHTML = htmlContent;
         }
-
-        // Call loadMetrics on page load
-        window.onload = loadMetrics;
-
-        // Submit form for prediction
-        document.getElementById('predictionForm').onsubmit = async function(e) {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const response = await fetch('/predict', {
-                method: 'POST',
-                body: formData
-            });
-            const result = await response.json();
-
-            document.getElementById('result').innerHTML = `
-                <h4>Input Text:</h4>
-                <p>${result.highlighted_input}</p>
-                <h4>Prediction:</h4>
-                <p>${result.prediction}</p>
-            `;
-        };
     </script>
 </body>
 </html>
